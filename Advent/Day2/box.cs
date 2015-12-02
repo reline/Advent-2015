@@ -1,37 +1,32 @@
-namespace Namespace {
+namespace present {
 	public class Box {
 
-		public static int totalWrappingPaper;
-		public static int totalRibbon;
+		private int w;
+		private int h;
+		private int l;
 
-		public int w;
-		public int h;
-		public int l;
-		public int smallestSideArea;
-		public int surfaceArea;
-		public int smallestPerimeter;
-		public int ribbon;
-		public int volume;
+		private int surfaceArea;
+		private int volume;
+
+		private int smallestSideArea;
+		private int smallestSidePerimeter;
 
 		public Box(int w, int h, int l) {
 			this.w = w;
 			this.h = h;
 			this.l = l;
 
-			findSmallestSide();
 			this.surfaceArea = calculateSurfaceArea();
-			addWrappingPaper();
-
 			this.volume = calculateVolume();
-			this.ribbon = calculateRibbon();
-			addRibbon();
+
+			calculateSmallestSide();
 		}
 
-		public int calculateSurfaceArea() {
+		private int calculateSurfaceArea() {
 			return 2*l*w + 2*w*h + 2*h*l;
 		}
 
-		public void findSmallestSide() {
+		private void calculateSmallestSide() {
 			int lowOne;
 			int lowTwo;
 			if(w < h) {
@@ -51,23 +46,19 @@ namespace Namespace {
 			}
 
 			smallestSideArea = lowOne*lowTwo;
-			smallestPerimeter = lowOne * 2 + lowTwo * 2;
+			smallestSidePerimeter = lowOne * 2 + lowTwo * 2;
 		}
 
-		public void addWrappingPaper() {
-			totalWrappingPaper += this.smallestSideArea + this.surfaceArea;
-		}
-
-		public int calculateVolume() {
+		private int calculateVolume() {
 			return w*h*l;
 		}
 
-		public int calculateRibbon() {
-			return this.smallestPerimeter + this.volume;
+		public int getWrappingPaper() {
+			return this.smallestSideArea + this.surfaceArea;
 		}
 
-		public void addRibbon() {
-			totalRibbon += ribbon;
+		public int getRibbon() {
+			return this.smallestSidePerimeter + this.volume;
 		}
 	}
 }

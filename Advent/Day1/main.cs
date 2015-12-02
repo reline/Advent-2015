@@ -1,6 +1,6 @@
 using System;
 
-public class ReadFromFile {
+public class Day1 {
 	public static void Main(string[] args) {
 		
 		int currentFloor = 0;
@@ -23,11 +23,11 @@ public class ReadFromFile {
 				currentFloor--;
 			if(currentFloor == -1 && enteredBasement == false)
 			{
-				System.Console.WriteLine("Santa enters the basement at character {0}", charPosition);
+				System.Console.WriteLine($"Santa enters the basement at character {charPosition}");
 				enteredBasement = true;
 			}
 		}
 
-		System.Console.WriteLine("Santa ends on floor {0}", currentFloor);
+		System.Console.WriteLine($"Santa ends on floor {currentFloor}");
 	}
 }
