@@ -36,7 +36,7 @@ public class Day3 {
 		System.Console.WriteLine($"Santa visits {houses.Count} houses by himself");
 
 
-		/*houses = new List<Point>();
+		houses = new List<Point>();
 
 		int santaX = 0; // santa x position
 		int santaY = 0; // santa y position
@@ -50,25 +50,40 @@ public class Day3 {
 
 		foreach(char character in text) {
 			
-			santaTurn = !santaTurn;
+			Point point = new Point();
 
-			if(character == 'v') {
-				y--;
-			} else if (character == '^') {
-				y++;
-			} else if (character == '>') {
-				x++;
-			} else if (character == '<') {
-				x--;
+			if(santaTurn) {
+				if(character == 'v') {
+					santaY--;
+				} else if (character == '^') {
+					santaY++;
+				} else if (character == '>') {
+					santaX++;
+				} else if (character == '<') {
+					santaX--;
+				}
+				point = new Point(santaX, santaY);
+			} else {
+				if(character == 'v') {
+					roboY--;
+				} else if (character == '^') {
+					roboY++;
+				} else if (character == '>') {
+					roboX++;
+				} else if (character == '<') {
+					roboX--;
+				}
+				point = new Point(roboX, roboY);
 			}
-
-			Point point = new Point(x, y);
+			
             if(!houses.Contains(point)) {
             	houses.Add(point);
             }
+
+            santaTurn = !santaTurn;
 		}
 
-		System.Console.WriteLine($"Santa visits {houses.Count} houses with RoboSanta");*/
+		System.Console.WriteLine($"Santa visits {houses.Count} houses with help from RoboSanta");
 	}
 }
 
