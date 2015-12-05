@@ -5,88 +5,52 @@ using System.Collections.Generic;
 using System.Text;
 using System.Security.Cryptography;
 
-/** prepare for horribly named variables **/
 public class Day4 {
 	public static void Main(string[] args) {
-		string text = "iwrupvqb";
-		// string test = "abcdef"; //609043
-		string hex = CreateSmallestAnswer(text);
-		System.Console.WriteLine($"The answer for {text} is {hex}");
-		string md5hash = CreateMD5(text + hex);
-		System.Console.WriteLine($"The MD5 hash for {text}{hex} is {md5hash}");
+		string text = "iwrupvqb"; // iwrupvqb
+		KeyValuePair<int, string> answer = CreateSmallestAnswer(text);
+		System.Console.WriteLine($"The answer for {text} is {answer.Key}");
+		System.Console.WriteLine($"The MD5 hash for {text}{answer.Key} is {answer.Value}");
 	}
 
-	public static string CreateSmallestAnswer(string input)
-	{
-		// todo: change hashNum and hash to a pair value
-		string smallestHash = "";
-		string smallestHashSolution = "";
-		string hash = "";
-		int hashNum = 0;
-		string stringMaxLength = "";
-		int maxLength = Int32.Parse("1" + stringMaxLength.PadLeft(input.Length, '0')); // 1000000
+	public static KeyValuePair<int, string> CreateSmallestAnswer(string input) {
 
-		while(hashNum < maxLength)
-		{
-			// convert our int to a string with the correct amount of 0's in front
-			int zeros = input.Length - hashNum.ToString().Length;
+		string str = "";
+		int hashInput = Int32.Parse(str.PadLeft(input.Length - 1, '9')); // 9999999 minimum/startpos
+		int maxLength = Int32.Parse("1" + str.PadLeft(input.Length, '0')); // 100000000 maximum
 
-			string solution = "";
-			for(int i = 0; i < zeros; i++)
-			{
-				solution += "0";
-			}
-			solution += hashNum.ToString();
-			// hash = hash.PadLeft(zeros, '0');
+		KeyValuePair<int, string> hash = new KeyValuePair<int, string>(hashInput, "");
+		KeyValuePair<int, string> answer = hash;
 
-			// progress tracking 
-			//System.Console.WriteLine($"Input: {solution}");
-
+		while (hash.Key < maxLength) {
 			// create our md5 hash
-			hash = CreateMD5(input + solution);
-			// DEBUG
-			// System.Console.WriteLine($"Hash: {hash}");
-
-			if (smallestHash != "")
-			{
-				// keep the smaller hash
-				if(isSmallerHex(hash, smallestHash))
-				{
-					smallestHash = hash;
-					smallestHashSolution = solution;
-					System.Console.WriteLine($"New smallestHashSolution: {smallestHashSolution}\nNew smallestHash: {smallestHash}");
-				}
-			} 
-			else
-			{
-				smallestHash = hash;
-				smallestHashSolution = solution;
-			}
-			
-			// System.Console.WriteLine($"Smallest Hash: {smallestHashSolution}");
+			string hashVal = CreateMD5(input + (hash.Key + 1).ToString());
 
 			// increment
-			hashNum++;
-		}
+		 	hash = new KeyValuePair<int, string>(hash.Key + 1, hashVal);
 
-		return smallestHashSolution;
+		 	if (answer.Value == "") {
+		 		// initialize answer.Value if it hasn't been already
+		 		answer = hash;
+		 	} else if(isSmallerHex(hash.Value, answer.Value)) {
+				// keep the smaller hash
+				answer = hash;
+				System.Console.WriteLine($"New solution: {input}{answer.Key} = {answer.Value}");
+			}
+		}
+		return answer;
 	}
 
-	public static bool isSmallerHex(string arg1, string arg2)
-	{
-		// DEBUG
-		// System.Console.WriteLine($"Comparing: {arg1} and {arg2}");
-		if(arg1.Length < arg2.Length)
-		{
+	public static bool isSmallerHex(string arg1, string arg2) {
+
+		if(arg1.Length < arg2.Length) {
 			return true;
 		}
-		else if(arg2.Length < arg1.Length)
-		{
+		else if(arg2.Length < arg1.Length) {
 			return false;
 		}
 
-		Dictionary<char, int> dict = new Dictionary<char, int>()
-	    {
+		Dictionary<char, int> dict = new Dictionary<char, int>() {
 	        { 'A', 10 },
 	        { 'B', 11 },
 	        { 'C', 12 },
@@ -95,44 +59,32 @@ public class Day4 {
 	        { 'F', 15 }
 	    };
 
-		for (int i = 0; i < arg1.Length; i++)
-		{
+		for (int i = 0; i < arg1.Length; i++) {
 			int first = 0;
 			int second = 0;
 			
-			if(dict.ContainsKey(arg1[i]))
-			{
+			if(dict.ContainsKey(arg1[i])) {
 				dict.TryGetValue(arg1[i], out first);
-			}
-			else
-			{
+			} else {
 				first = (int)Char.GetNumericValue(arg1[i]);
 			}
 
-			if(dict.ContainsKey(arg2[i]))
-			{
+			if(dict.ContainsKey(arg2[i])) {
 				dict.TryGetValue(arg2[i], out second);
-			}
-			else
-			{
+			} else {
 				second = (int)Char.GetNumericValue(arg2[i]);
 			}
 
-			if(first < second)
-			{
+			if(first < second) {
 				return true;
-			}
-			else if(second < first)
-			{
+			} else if(second < first) {
 				return false;
 			}
 		}
-
 		return true;
 	}
 
-	public static string CreateMD5(string input)
-	{
+	public static string CreateMD5(string input) {
 	    // Use input string to calculate MD5 hash
 	    MD5 md5 = System.Security.Cryptography.MD5.Create();
 	    byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
@@ -140,8 +92,7 @@ public class Day4 {
 
 	    // Convert the byte array to hexadecimal string
 	    StringBuilder sb = new StringBuilder();
-	    for (int i = 0; i < hashBytes.Length; i++)
-	    {
+	    for (int i = 0; i < hashBytes.Length; i++) {
 	        sb.Append(hashBytes[i].ToString("X2"));
 	    }
 	    return sb.ToString();
