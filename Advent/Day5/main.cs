@@ -1,43 +1,38 @@
 using System;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 public class Day4 {
 	public static void Main(string[] args) {
-		string[] lines = System.IO.File.ReadAllLines(@"input.txt"); // less than 274
-
-		string[] forbiddenStrings = new string[4] {"ab", "cd", "pq", "xy"};
-		string vowels = "aeiou";
+		string[] lines = System.IO.File.ReadAllLines(@"input.txt");
 
 		int niceStrings = 0;
 
 		foreach(string line in lines) {
-			int numVowels = 0;
-			bool dub = false;
-			bool containsForbiddenString = false;
-			char prevChar = '0';
+			bool repeatPair = false;
+			bool repeatSplit = false;
 
-			foreach(string forbiddenString in forbiddenStrings) {
-				if(line.Contains(forbiddenString)) {
-					containsForbiddenString = true;
-					break;
+			for(int i = 0; i < line.Length; i++) {
+
+				if(i < line.Length - 1) {
+					StringBuilder sb = new StringBuilder();
+					sb.Append(line[i]).Append(line[i+1]);
+					var regex = new Regex(sb.ToString());
+					if(regex.Matches(line).Count >= 2) {
+						repeatPair = true;
+					}
 				}
-			}
-			if(containsForbiddenString) continue;
-
-			foreach(char character in line) {
-				if(vowels.ToLowerInvariant().Contains(character)) {
-					numVowels++;
+				
+				if(i < line.Length - 2) {
+					if(line[i] == line[i+2]) {
+						repeatSplit = true;
+					}
 				}
-
-				if(character == prevChar) {
-					dub = true;
-				}
-
-				prevChar = character;
+				
 			}
 
-			if(numVowels >= 3 && dub && !containsForbiddenString) {
+			if(repeatPair && repeatSplit) {
 				niceStrings++;
 				System.Console.WriteLine($"Nice: {line}");
 			} else {
