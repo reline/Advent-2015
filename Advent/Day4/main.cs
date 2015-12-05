@@ -12,7 +12,7 @@ public class Day4 {
 		int hashNum = 1;
 		while(true) {
 			string hashVal = CreateMD5(text + hashNum.ToString());
-			if(hashVal.Substring(0, 5) == "00000") {
+			if(hashVal.Substring(0, 6) == "000000") {
 				System.Console.WriteLine($"The answer for {text} is {hashNum}");
 				System.Console.WriteLine($"The MD5 hash for {text}{hashNum} is {hashVal}");
 				return;
