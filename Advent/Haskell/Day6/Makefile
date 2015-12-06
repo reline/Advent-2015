@@ -1,0 +1,6 @@
+all:
+	@echo Compiling...
+	@ghc main.hs -o program
+	@echo Running...
+	@./program
+	@echo Done.
