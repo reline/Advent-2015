@@ -1,5 +1,6 @@
 all:
 	@echo Compiling...
-	@mcs *.cs
+	@mcs *.cs -out:main.exe
 	@echo Running...
-	@mono *.exe
+	@mono main.exe
+	@echo Done.
