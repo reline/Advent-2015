@@ -1,10 +1,9 @@
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <inttypes.h>
 
-#include "main.h"
+void flipSwitch(char* inst, int array[1000][1000], int x1, int y1, int x2, int y2);
 
 int main(void)
 {
@@ -37,13 +36,13 @@ int main(void)
    		}
 
    		if (strcmp(words[0], "toggle") == 0) {
-   			toggleLights(lights, strtoumax(words[1], NULL, 10), strtoumax(words[2], NULL, 10), strtoumax(words[4], NULL, 10), strtoumax(words[5], NULL, 10));
+   			flipSwitch("toggle", lights, strtoumax(words[1], NULL, 10), strtoumax(words[2], NULL, 10), strtoumax(words[4], NULL, 10), strtoumax(words[5], NULL, 10));
    		}
    		else if (strcmp(words[1], "on") == 0) {
-   			turnOnLights(lights, strtoumax(words[2], NULL, 10), strtoumax(words[3], NULL, 10), strtoumax(words[5], NULL, 10), strtoumax(words[6], NULL, 10));
+   			flipSwitch("on", lights, strtoumax(words[2], NULL, 10), strtoumax(words[3], NULL, 10), strtoumax(words[5], NULL, 10), strtoumax(words[6], NULL, 10));
 		}
    		else if (strcmp(words[1], "off") == 0) {
-   			turnOffLights(lights, strtoumax(words[2], NULL, 10), strtoumax(words[3], NULL, 10), strtoumax(words[5], NULL, 10), strtoumax(words[6], NULL, 10));
+   			flipSwitch("off", lights, strtoumax(words[2], NULL, 10), strtoumax(words[3], NULL, 10), strtoumax(words[5], NULL, 10), strtoumax(words[6], NULL, 10));
    		}
    }
 
@@ -62,30 +61,19 @@ int main(void)
    exit(EXIT_SUCCESS);
 }
 
-void toggleLights(int array[1000][1000], int x1, int y1, int x2, int y2) {
+void flipSwitch(char* inst, int array[1000][1000], int x1, int y1, int x2, int y2) {
 	for (int i = x1; i <= x2; i++) {
 		for (int j = y1; j <= y2; j++) {
-			// array[i][j] = !array[i][j];
-			array[i][j] += 2;
-		}
-	}
-}
-
-void turnOnLights(int array[1000][1000], int x1, int y1, int x2, int y2) {
-	for (int i = x1; i <= x2; i++) {
-		for (int j = y1; j <= y2; j++) {
-			// array[i][j] = 1;
-			array[i][j]++;
-		}
-	}
-}
-
-void turnOffLights(int array[1000][1000], int x1, int y1, int x2, int y2) {
-	for (int i = x1; i <= x2; i++) {
-		for (int j = y1; j <= y2; j++) {
-			// array[i][j] = 0;
-			if (array[i][j] > 0) {
-				array[i][j]--;
+			
+			if (inst == "toggle") {
+				// array[i][j] = !array[i][j]; // part 1
+				array[i][j] += 2;
+			} else if (inst == "on") {
+				// array[i][j] = 1; // part 1
+				array[i][j]++;
+			} else if (inst == "off") {
+				// array[i][j] = 0; // part 1
+				if (array[i][j] > 0) array[i][j]--;
 			}
 		}
 	}
