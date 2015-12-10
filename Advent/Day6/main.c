@@ -8,9 +8,15 @@
 
 int main(void)
 {
-	int lights[1000][1000];// = {0};
-	//memset(lights, 0, sizeof(lights));
-	//printf("%d\n", lights[0][0]);
+	int lights[1000][1000] = {0};
+	memset(lights, 0, sizeof(lights));
+
+	for (int i = 0; i < 1000; i++) {
+		for (int j = 0; j < 1000; j++) {
+			//printf("%d,%d\n", i, j);
+			lights[i][j] = 0;
+		}
+	}
 
    	FILE * fp;
    	char * line = NULL;
@@ -31,16 +37,24 @@ int main(void)
    		}
 
    		if (strcmp(words[0], "toggle") == 0) {
-   			// toggle words[1] words[2] through words[4] words[5]
-   			fillArray(*lights, strtoumax(words[1], NULL, 10), strtoumax(words[2], NULL, 10), strtoumax(words[4], NULL, 10), strtoumax(words[5], NULL, 10));
+   			toggleLights(lights, strtoumax(words[1], NULL, 10), strtoumax(words[2], NULL, 10), strtoumax(words[4], NULL, 10), strtoumax(words[5], NULL, 10));
    		}
    		else if (strcmp(words[1], "on") == 0) {
-   			// turn on words[2] words[3] through words[5] words[6]
+   			turnOnLights(lights, strtoumax(words[2], NULL, 10), strtoumax(words[3], NULL, 10), strtoumax(words[5], NULL, 10), strtoumax(words[6], NULL, 10));
 		}
    		else if (strcmp(words[1], "off") == 0) {
-   			// turn off words[2] words[3] through words[5] words[6]
+   			turnOffLights(lights, strtoumax(words[2], NULL, 10), strtoumax(words[3], NULL, 10), strtoumax(words[5], NULL, 10), strtoumax(words[6], NULL, 10));
    		}
    }
+
+   int lightCount = 0;
+   // count lights that are on
+   for (int i = 0; i < 1000; i++) {
+		for (int j = 0; j < 1000; j++) {
+			lightCount += lights[i][j];
+		}
+	}
+	printf("%d\n", lightCount);
 
    fclose(fp);
    if (line)
@@ -48,11 +62,31 @@ int main(void)
    exit(EXIT_SUCCESS);
 }
 
-void fillArray(int* array, int x1, int y1, int x2, int y2) {
-	printf("%s\n", "fillArray");
+void toggleLights(int array[1000][1000], int x1, int y1, int x2, int y2) {
+	for (int i = x1; i <= x2; i++) {
+		for (int j = y1; j <= y2; j++) {
+			// array[i][j] = !array[i][j];
+			array[i][j] += 2;
+		}
+	}
 }
 
-struct Pair {
-  int first;
-  int second;
-};
+void turnOnLights(int array[1000][1000], int x1, int y1, int x2, int y2) {
+	for (int i = x1; i <= x2; i++) {
+		for (int j = y1; j <= y2; j++) {
+			// array[i][j] = 1;
+			array[i][j]++;
+		}
+	}
+}
+
+void turnOffLights(int array[1000][1000], int x1, int y1, int x2, int y2) {
+	for (int i = x1; i <= x2; i++) {
+		for (int j = y1; j <= y2; j++) {
+			// array[i][j] = 0;
+			if (array[i][j] > 0) {
+				array[i][j]--;
+			}
+		}
+	}
+}
