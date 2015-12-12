@@ -10,51 +10,41 @@
 	}
 
 	for ($i=0; $i < count($lines); $i++) {
-		// count code characters
-		$codeChar += strlen($lines[$i]) - 1;
+
+		$codeCharactersOnThisLine = 0;
 		$memoryCharactersOnThisLine = 0;
 
-		// count memory characters
 		for ($j=0; $j < strlen($lines[$i]); $j++) { 
 
+			$codeCharactersOnThisLine++;
+
 			$char = substr($lines[$i], $j, 1);
+			$nextChar = substr($lines[$i], $j + 1, 1);
 
-			// if the char is a backslash
-			if ($char == "\\") {
-
-				$nextChar = substr($lines[$i], $j + 1, 1);
-
-				// if the next character is x followed by any two character combination of 0-9 & A-F represents a single character
-				if ($nextChar == "x") {
-					$validChars = array('0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f');
-					$hex1 = substr($lines[$i], $j + 2, 1);
-					$hex2 = substr($lines[$i], $j + 3, 1);
-					if (in_array($hex1, $validChars) && in_array($hex2, $validChars)) {
-						$j += 3;
-					}
-				}				
-
-				// if the next character is a backslash or a double quotation mark
-				elseif ($nextChar == "\\" || $nextChar == "\"") {
-					$j++;
+			// if the char is a double quotation mark
+			if ($char == "\"") {
+				
+				// if it is the first or last character in the line
+				if ($j == 0 || $j == strlen($lines[$i]) - 1) {
+					$memoryCharactersOnThisLine += 3;
+				} else {
+					$memoryCharactersOnThisLine += 2;
 				}
-
-				$memoryCharactersOnThisLine++;
-
-			} elseif ($char != "\"") {
-				// if the char is not a double quotation mark
+			} elseif ($char == "\\") {
+				$memoryCharactersOnThisLine += 2;
+			} else {
 				$memoryCharactersOnThisLine++;
 			}
 		}
 
-		$memChar += $memoryCharactersOnThisLine - 1;
-		
+		$codeChar += $codeCharactersOnThisLine - 1;
+		$memChar += $memoryCharactersOnThisLine;
 	}
 
 	echo "<br>";
 	echo "Code characters: " . $codeChar . "<br>";
 	echo "Memory characters: " . $memChar . "<br>";
-	echo "Answer: " . ($codeChar - $memChar) . "<br>";
+	echo "Answer: " . ($memChar - $codeChar) . "<br>";
 
 	fclose($input);
 ?>
