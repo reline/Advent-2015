@@ -1,0 +1,6 @@
+all:
+	@echo Compiling...
+	@g++ -std=c++11 *.cpp -o program
+	@echo Running...
+	@./program
+	@echo Done.
