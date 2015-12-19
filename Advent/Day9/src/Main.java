@@ -73,8 +73,84 @@ public class Main {
             e.printStackTrace();
         }
 
-        locations.forEach(location->System.out.println(location.getName()));
+        int shortestPath = Integer.MAX_VALUE;
+        for (Location location : locations) {
+            int dijkstra = dijkstra(location);
+            if (dijkstra < shortestPath)
+                shortestPath = dijkstra;
+        }
+
+        System.out.println("Solution: " + shortestPath); // 117 is the answer for part one Faerun->AlphaCentauri->Tambi->Snowdin->Norrath->Tristram->Arbre->Straylight
+        // part 2: 833 too low, 1078 too high
     }
 
+    static int dijkstra(Location initLocation) {
+        Location currentLocation = initLocation;
+        List<Location> visited = new ArrayList<>();
 
+        while(true) {
+            boolean allVisited = true;
+            Pair<Location, Integer> shortestTentativeDistance = new Pair<>(new Location("North Pole"), Integer.MAX_VALUE);
+
+            // add currentlocation to visited list
+            currentLocation.visit();
+            if (!visited.contains(currentLocation)) {
+                visited.add(currentLocation);
+            }
+
+            // if all of the locations have been visited, return our lowest tentative value
+            for (Pair<Location, Integer> neighbor : currentLocation.neighborLocations) {
+                if (!(neighbor.getFirst().visited())) {
+                    allVisited = false;
+                }
+            }
+            if (allVisited) {
+                // save our solution
+                int solution = currentLocation.getTentativeDistance();
+
+                // reset our nodes! dumbass!
+                for (Location visitedLocation : visited) {
+                    visitedLocation.reset();
+                }
+
+                return solution;
+            }
+
+
+            // iterate through visited list
+            for (Location visitedLocation : visited) {
+                // iterate through neighbor list
+                for (Pair<Location, Integer> neighbor : visitedLocation.neighborLocations) {
+                    if (!(neighbor.getFirst().visited())) {
+
+                        // calculate tentative values
+
+                        // fix max stuff
+                        if (visitedLocation.getTentativeDistance() == Integer.MAX_VALUE) {
+                            visitedLocation.updateTentativeDistance(0);
+                        }
+                        if (neighbor.getFirst().getTentativeDistance() == Integer.MAX_VALUE) {
+                            neighbor.getFirst().updateTentativeDistance(
+                                    neighbor.getSecond()
+                            );
+                        }
+
+                        int tentVal = currentLocation.getTentativeDistance() + neighbor.getSecond();
+                        if (tentVal < neighbor.getFirst().getTentativeDistance()) {
+                            neighbor.getFirst().updateTentativeDistance(tentVal);
+                        }
+
+                        // set the lowest tentative value of all of the neighbors
+                        if (neighbor.getFirst().getTentativeDistance() < shortestTentativeDistance.getFirst().getTentativeDistance()) {
+                            shortestTentativeDistance = neighbor;
+                        }
+                    }
+                }
+            }
+
+            // change our current location
+            currentLocation = shortestTentativeDistance.getFirst();
+            //totalDistance = shortestTentativeDistance.getFirst().getTentativeDistance();
+        }
+    }
 }
